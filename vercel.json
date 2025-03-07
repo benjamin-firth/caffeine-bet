@@ -1,0 +1,9 @@
+{
+    "crons": [
+      {
+        "path": "/api/schedule-winner",
+        "schedule": "0 0 * * *"
+      }
+    ]
+  }
+  
