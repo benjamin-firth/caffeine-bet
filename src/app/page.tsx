@@ -46,20 +46,27 @@ export default function CaffeineBetApp() {
 
   const submitBet = async () => {
     if (!betAmount || !user) return;
-
+  
     try {
-      await fetch('/api/submit-bet', {
+      const newBet: Bet = { user, bet: parseInt(betAmount, 10) };
+  
+      const response = await fetch('/api/submit-bet', {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user, bet: parseInt(betAmount, 10) })
+        body: JSON.stringify(newBet),
       });
-
-      setBetAmount('');
+  
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error);
+  
       fetchBets();
+  
+      setBetAmount('');
     } catch (error) {
       console.error("Error submitting bet:", error);
     }
   };
+  
 
   return (
     <div style={{ maxWidth: 500, margin: '0 auto', padding: 16 }}>
