@@ -19,10 +19,10 @@ export default function CaffeineBetApp() {
   const [betAmount, setBetAmount] = useState("");
   const [user, setUser] = useState("");
   const [caffeineTotal, setCaffeineTotal] = useState<number | null>(null);
-  const [hasSubmittedBet, setHasSubmittedBet] = useState(false);
   const [leaderboard, setLeaderboard] = useState<{ user: string; count: number }[]>([]);
   const [loadingWinner, setLoadingWinner] = useState(true);
   const [loadingLeaderboard, setLoadingLeaderboard] = useState(true);
+  const [showBets, setShowBets] = useState(false);
 
   useEffect(() => {
     fetchBets();
@@ -85,7 +85,7 @@ export default function CaffeineBetApp() {
       fetchBets();
       fetchWinner();
       fetchLeaderboard();
-      setHasSubmittedBet(true);
+      setShowBets(true);
       setBetAmount("");
     } catch (error) {
       console.error("Error submitting bet:", error);
@@ -127,7 +127,7 @@ export default function CaffeineBetApp() {
               </Button>
             </CardContent>
           </Card>
-          {hasSubmittedBet && (
+          {showBets && (
             <Card style={{ padding: 16, backgroundColor: "#f5f5f5" }}>
               <CardContent>
                 <Typography variant="h6" gutterBottom>Current Bets</Typography>
@@ -182,6 +182,23 @@ export default function CaffeineBetApp() {
           </Card>
         </div>
       </div>
+      <Button
+        variant="contained"
+        onClick={() => setShowBets(!showBets)}
+        style={{
+          position: "fixed",
+          bottom: "20px",
+          left: "20px",
+          backgroundColor: "#333",
+          color: "white",
+          opacity: 0.7,
+          fontSize: "12px",
+          padding: "6px 12px",
+          borderRadius: "20px",
+        }}
+      >
+        {showBets ? "Hide Bets" : "View Bets"}
+      </Button>
     </div>
   );
 }
