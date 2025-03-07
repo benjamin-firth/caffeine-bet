@@ -106,7 +106,7 @@ export default function CaffeineBetApp() {
           marginBottom: "20px",
         }}
       >
-        Matthew's Daily Caffeine Intake Bet
+        Matthew&apos;s Daily Caffeine Intake Bet
       </Typography>
       <div style={{ display: "flex", justifyContent: "center", gap: "20px", maxWidth: "1000px", margin: "0 auto" }}>
         <div style={{ flex: 2 }}>
@@ -138,7 +138,7 @@ export default function CaffeineBetApp() {
                 </ul>
                 {caffeineTotal !== null && (
                   <Typography variant="h6" align="center" style={{ marginTop: 16 }}>
-                    Matthew’s Current Caffeine Total: {caffeineTotal}mg
+                    Matthew&apos;s Current Caffeine Total: {caffeineTotal}mg
                   </Typography>
                 )}
               </CardContent>
@@ -159,7 +159,7 @@ export default function CaffeineBetApp() {
                   align="center"
                   style={{ marginBottom: 12, backgroundColor: "#c8e6c9", padding: "10px", borderRadius: "4px" }}
                 >
-                  Yesterday's Winner: {winner.user} ({winner.bet}mg)
+                  Yesterday&apos;s Winner: {winner.user} ({winner.bet}mg)
                 </Typography>
               ) : (
                 <Typography align="center">No winner yet</Typography>

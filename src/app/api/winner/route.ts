@@ -27,7 +27,7 @@ export async function GET() {
       return NextResponse.json({ user: "No winner yet", bet: 0, caffeineTotal: actualCaffeineTotal });
     }
 
-    let winner = bets.reduce((prev, curr) =>
+    const winner = bets.reduce((prev, curr) =>
       Math.abs(curr.bet - actualCaffeineTotal) < Math.abs(prev.bet - actualCaffeineTotal) ? curr : prev
     );
 

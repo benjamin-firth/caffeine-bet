@@ -21,7 +21,7 @@ export async function GET() {
       return NextResponse.json({ error: "No bets placed today" }, { status: 500 });
     }
 
-    let winner = bets.reduce((prev, curr) =>
+    const winner = bets.reduce((prev, curr) =>
       Math.abs(curr.bet - actualCaffeineTotal) < Math.abs(prev.bet - actualCaffeineTotal) ? curr : prev
     );
 

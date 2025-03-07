@@ -1,1 +1,1 @@
-export let bets: { user: string; bet: number }[] = [];
+export const bets: { user: string; bet: number }[] = [];
