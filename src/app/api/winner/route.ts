@@ -1,42 +1,37 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
-import { getCaffeineTotal } from "@/lib/scraper";
 
 export async function GET() {
   try {
-    const actualCaffeineTotal = await getCaffeineTotal();
-    
-    if (actualCaffeineTotal === null) {
-      console.error("❌ Failed to fetch caffeine total");
-      return NextResponse.json({ error: "Failed to fetch caffeine total" }, { status: 500 });
-    }
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const formattedDate = yesterday.toISOString().split("T")[0];
 
-    console.log("✅ Scraped caffeine total:", actualCaffeineTotal);
-
-    const { data: bets, error } = await supabase
-      .from("bets")
+    const { data: winners, error } = await supabase
+      .from("winners")
       .select("*")
-      .order("created_at", { ascending: true }); 
+      .gte("created_at", formattedDate + "T00:00:00Z")
+      .lt("created_at", formattedDate + "T23:59:59Z")
+      .order("created_at", { ascending: false })
+      .limit(1);
 
     if (error) {
       console.error("❌ Supabase Fetch Error:", error);
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    if (!bets || bets.length === 0) {
-      return NextResponse.json({ user: "No winner yet", bet: 0, caffeineTotal: actualCaffeineTotal });
+    if (!winners || winners.length === 0) {
+      return NextResponse.json({ user: "No winner yet", bet: 0 });
     }
 
-    const winner = bets.reduce((prev, curr) =>
-      Math.abs(curr.bet - actualCaffeineTotal) < Math.abs(prev.bet - actualCaffeineTotal) ? curr : prev
-    );
+    const winner = winners[0];
 
-    console.log("🏆 Winner selected:", winner);
+    console.log("🏆 Fetched Yesterday’s Winner:", winner);
 
     return NextResponse.json({ 
       user: winner.user, 
       bet: winner.bet, 
-      caffeineTotal: actualCaffeineTotal 
+      caffeineTotal: winner.caffeineTotal 
     });
 
   } catch (error) {
