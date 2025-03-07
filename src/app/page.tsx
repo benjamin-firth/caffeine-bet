@@ -18,6 +18,8 @@ export default function CaffeineBetApp() {
   const [winner, setWinner] = useState<Winner | null>(null);
   const [betAmount, setBetAmount] = useState('');
   const [user, setUser] = useState('');
+  const [caffeineTotal, setCaffeineTotal] = useState<number | null>(null);
+  const [hasSubmittedBet, setHasSubmittedBet] = useState(false);
 
   useEffect(() => {
     fetchBets();
@@ -37,8 +39,11 @@ export default function CaffeineBetApp() {
   const fetchWinner = async () => {
     try {
       const response = await fetch('/api/winner');
-      const data: Winner = await response.json();
+      const data = await response.json();
+      
       setWinner(data);
+      setCaffeineTotal(data.caffeineTotal);
+  
     } catch (error) {
       console.error("Error fetching winner:", error);
     }
@@ -60,7 +65,8 @@ export default function CaffeineBetApp() {
       if (!response.ok) throw new Error(result.error);
   
       fetchBets();
-  
+      
+      setHasSubmittedBet(true); // ✅ Track that the user has submitted a bet
       setBetAmount('');
     } catch (error) {
       console.error("Error submitting bet:", error);
@@ -104,16 +110,23 @@ export default function CaffeineBetApp() {
           </Button>
         </CardContent>
       </Card>
-      <Card style={{ padding: 16 }}>
-        <CardContent>
-          <Typography variant="h6" gutterBottom>Current Bets</Typography>
-          <ul>
-            {bets.map((bet, index) => (
-              <li key={index}>{bet.user}: {bet.bet}mg</li>
-            ))}
-          </ul>
-        </CardContent>
-      </Card>
+      {hasSubmittedBet && (
+        <Card style={{ padding: 16 }}>
+          <CardContent>
+            <Typography variant="h6" gutterBottom>Current Bets</Typography>
+            <ul>
+              {bets.map((bet, index) => (
+                <li key={index}>{bet.user}: {bet.bet}mg</li>
+              ))}
+            </ul>
+            {caffeineTotal !== null && (
+              <Typography variant="h6" align="center" style={{ marginTop: 16 }}>
+                Matthew’s Current Caffeine Total: {caffeineTotal}mg
+              </Typography>
+            )}
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }
