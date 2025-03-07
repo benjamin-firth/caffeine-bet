@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
+import { getCaffeineTotal } from "@/lib/scraper";
 
 export async function GET() {
   try {
@@ -20,8 +21,14 @@ export async function GET() {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
+    const actualCaffeineTotal = await getCaffeineTotal();
+
     if (!winners || winners.length === 0) {
-      return NextResponse.json({ user: "No winner yet", bet: 0 });
+      return NextResponse.json({ 
+        user: "No winner yet", 
+        bet: 0, 
+        caffeineTotal: actualCaffeineTotal ?? 0
+      });
     }
 
     const winner = winners[0];
@@ -31,7 +38,7 @@ export async function GET() {
     return NextResponse.json({ 
       user: winner.user, 
       bet: winner.bet, 
-      caffeineTotal: winner.caffeineTotal 
+      caffeineTotal: winner.caffeineTotal ?? actualCaffeineTotal ?? 0
     });
 
   } catch (error) {
